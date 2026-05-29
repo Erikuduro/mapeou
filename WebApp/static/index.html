@@ -363,6 +363,119 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
+    /* ── Sobre ───────────────────────────────────────────────────────────── */
+    .sobre-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0 4px;
+      text-align: center;
+    }
+
+    .sobre-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .sobre-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    .sobre-avatar {
+      width: 88px; height: 88px;
+      border-radius: 20px;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+      margin-bottom: 16px;
+      background: var(--input-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .sobre-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .sobre-role {
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .sobre-inst {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .sobre-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+
+    .sobre-section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: left;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .sobre-desc {
+      font-size: 0.875rem;
+      color: var(--text);
+      line-height: 1.65;
+      text-align: left;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .sobre-desc strong { color: var(--accent); font-weight: 600; }
+
+    .sobre-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .sobre-tag {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 13px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .sobre-footer {
+      font-size: 0.72rem;
+      color: #444;
+      padding-top: 4px;
+    }
+
     /* ── Modal ───────────────────────────────────────────────────────────── */
     .modal-overlay {
       display: none;
@@ -452,6 +565,7 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('map', this)">Mapa Municipal</button>
     <button class="tab-btn" onclick="switchTab('chart', this)">Dados IBGE</button>
+    <button class="tab-btn" onclick="switchTab('sobre', this)">Sobre</button>
   </div>
 
   <!-- ── Painel: Mapa ──────────────────────────────────────────────────── -->
@@ -571,6 +685,56 @@
     <div class="result-card error" id="chart-error-card">
       <h3>Não foi possível gerar o gráfico</h3>
       <div class="detail-box" id="chart-error-detail"></div>
+    </div>
+  </div>
+
+  <!-- ── Painel: Sobre ────────────────────────────────────────────────── -->
+  <div class="tab-panel" id="panel-sobre">
+    <div class="sobre-wrap">
+
+      <div class="sobre-badge">
+        <div class="sobre-badge-dot"></div>
+        Mapeou
+      </div>
+
+      <div class="sobre-avatar">ER</div>
+
+      <div class="sobre-name">Erik Octavio Rodrigues</div>
+      <div class="sobre-role">Discente · Iniciação Científica</div>
+      <div class="sobre-inst">Universidade Federal do Agreste de Pernambuco — UFAPE</div>
+
+      <div class="sobre-divider"></div>
+
+      <div class="sobre-section-label">Sobre a ferramenta</div>
+      <div class="sobre-desc">
+        O <strong>Mapeou</strong> nasceu da necessidade de tornar os dados públicos do IBGE
+        mais acessíveis. Informações como produção agrícola estadual, efetivo de rebanhos
+        e séries históricas de culturas estão disponíveis no SIDRA, mas exigem navegação
+        técnica e conhecimento das tabelas para encontrá-las.<br><br>
+        A ferramenta permite obter gráficos e mapas cartográficos de forma direta, apenas
+        descrevendo em linguagem natural o que se deseja visualizar. Todos os dados vêm
+        de fontes oficiais e abertas — <strong>IBGE</strong>, <strong>OpenStreetMap</strong>
+        e <strong>Natural Earth</strong> — sem cadastro e sem custo.
+      </div>
+
+      <div class="sobre-section-label">Funcionalidades</div>
+      <div class="sobre-tags">
+        <span class="sobre-tag">Mapas Municipais</span>
+        <span class="sobre-tag">Projeção UTM/SIRGAS 2000</span>
+        <span class="sobre-tag">Dados IBGE · SIDRA</span>
+        <span class="sobre-tag">Séries Históricas</span>
+        <span class="sobre-tag">Ranking por Estado</span>
+        <span class="sobre-tag">Ranking de Culturas</span>
+        <span class="sobre-tag">Hidrografia OSM</span>
+        <span class="sobre-tag">Exportação PDF / PNG</span>
+        <span class="sobre-tag">Produção Agrícola</span>
+        <span class="sobre-tag">Pecuária e Rebanhos</span>
+      </div>
+
+      <div class="sobre-divider"></div>
+
+      <div class="sobre-footer">Feito com dedicação · UFAPE · 2025</div>
+
     </div>
   </div>
 
