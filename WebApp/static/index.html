@@ -596,7 +596,7 @@
            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="5 3 19 12 5 21 5 3"/>
       </svg>
-      <span id="btn-label">Gerar Mapa PDF</span>
+      <span id="btn-label">Gerar Mapa</span>
     </button>
     <p class="kbd-hint">ou pressione <kbd>Ctrl</kbd> + <kbd>Enter</kbd></p>
 
@@ -610,9 +610,8 @@
 
     <div class="result-card success" id="success-card">
       <h3>Mapa gerado com sucesso</h3>
-      <p>O download iniciou automaticamente. Se não iniciou:</p>
       <div class="btn-group">
-        <a id="download-link" class="btn-outline green" href="#" download="mapa.pdf">Baixar PDF</a>
+        <button class="btn-outline green" onclick="openModal(downloadUrl, document.getElementById('description').value, 'mapa.png')">Ver mapa</button>
       </div>
     </div>
 
@@ -661,7 +660,7 @@
            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
       </svg>
-      <span id="chart-btn-label">Gerar Gráfico PDF</span>
+      <span id="chart-btn-label">Gerar Gráfico</span>
     </button>
     <p class="kbd-hint">ou pressione <kbd>Ctrl</kbd> + <kbd>Enter</kbd></p>
 
@@ -726,7 +725,7 @@
         <span class="sobre-tag">Ranking por Estado</span>
         <span class="sobre-tag">Ranking de Culturas</span>
         <span class="sobre-tag">Hidrografia OSM</span>
-        <span class="sobre-tag">Exportação PDF / PNG</span>
+        <span class="sobre-tag">Exportação PNG</span>
         <span class="sobre-tag">Produção Agrícola</span>
         <span class="sobre-tag">Pecuária e Rebanhos</span>
       </div>
@@ -815,7 +814,7 @@
 
   function setLoading(on) {
     document.getElementById('gen-btn').disabled = on;
-    document.getElementById('btn-label').textContent = on ? 'Gerando...' : 'Gerar Mapa PDF';
+    document.getElementById('btn-label').textContent = on ? 'Gerando...' : 'Gerar Mapa';
     document.getElementById('status-box').style.display = on ? 'block' : 'none';
     if (!on) stopTimer();
   }
@@ -838,11 +837,11 @@
       });
 
       if (resp.ok) {
-        document.getElementById('status-text').textContent = 'Preparando download...';
+        document.getElementById('status-text').textContent = 'Carregando visualização...';
         const blob = await resp.blob();
         downloadUrl = URL.createObjectURL(blob);
-        document.getElementById('download-link').href = downloadUrl;
-        triggerDownload(downloadUrl, 'mapa.pdf');
+        const titulo = text.length > 60 ? text.slice(0, 57) + '...' : text;
+        openModal(downloadUrl, `Mapa — ${titulo}`, 'mapa.png');
         showMapCard('success-card');
       } else {
         const data = await resp.json();
@@ -866,9 +865,10 @@
   }
 
   // ── Modal ─────────────────────────────────────────────────────────────
-  function openModal(url, titulo) {
+  function openModal(url, titulo, filename = 'grafico.png') {
     document.getElementById('modal-img').src = url;
     document.getElementById('modal-download').href = url;
+    document.getElementById('modal-download').download = filename;
     document.getElementById('modal-title').textContent = titulo;
     document.getElementById('chart-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -908,7 +908,7 @@
 
   function setChartLoading(on) {
     document.getElementById('chart-btn').disabled = on;
-    document.getElementById('chart-btn-label').textContent = on ? 'Consultando...' : 'Visualizar Gráfico';
+    document.getElementById('chart-btn-label').textContent = on ? 'Consultando...' : 'Gerar Gráfico';
     document.getElementById('chart-status-box').style.display = on ? 'block' : 'none';
     if (!on) stopChartTimer();
   }

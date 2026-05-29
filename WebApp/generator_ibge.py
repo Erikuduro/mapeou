@@ -598,7 +598,7 @@ def generate_ibge_map(
     _draw_legend(ax_legend, muni_nome, uf_sigla, uf_nome, regiao_nome, has_urban)
     _draw_metadata(ax_meta, fonte, projecao_auto, datum, autores, organizacao)
 
-    plt.savefig(output_path, format='pdf', bbox_inches='tight',
+    plt.savefig(output_path, format='png', bbox_inches='tight',
                 facecolor='white', dpi=150)
     plt.close(fig)
 
@@ -609,7 +609,7 @@ def generate_ibge_map_bytes(
     states:       gpd.GeoDataFrame,
     sitio_urbano: gpd.GeoDataFrame | None = None,
 ) -> bytes:
-    with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+    with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
         path = tmp.name
     try:
         generate_ibge_map(municipio, state_munis, states, path, sitio_urbano)

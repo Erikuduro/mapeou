@@ -87,8 +87,8 @@ async def generate(req: MapRequest):
 
     return Response(
         content=pdf_bytes,
-        media_type="application/pdf",
-        headers={"Content-Disposition": 'attachment; filename="mapa.pdf"'},
+        media_type="image/png",
+        headers={"Content-Disposition": 'inline; filename="mapa.png"'},
     )
 
 
