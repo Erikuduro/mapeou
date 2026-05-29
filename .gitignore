@@ -1,0 +1,44 @@
+# Cache de dados geoespaciais e SIDRA (gerado em runtime)
+WebApp/cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+.env
+
+# Arquivos temporários de mapa/PDF
+*.pdf
+*.tmp
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+uvicorn.log
+
+# Secrets (nunca subir)
+.env
+*.key
+secrets.py
