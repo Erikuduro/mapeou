@@ -20,7 +20,7 @@ LOCALIDADES  = "https://servicodados.ibge.gov.br/api/v1/localidades"
 _UF_MUNIS_URL = (
     "https://geoftp.ibge.gov.br/organizacao_do_territorio"
     "/malhas_territoriais/malhas_municipais/municipio_2022"
-    "/UFs/{uf}/{uf_lower}_Municipios_2022.zip"
+    "/UFs/{uf}/{uf}_Municipios_2022.zip"
 )
 BR_UF_URL = (
     "https://geoftp.ibge.gov.br/organizacao_do_territorio"
@@ -190,7 +190,7 @@ def get_state_municipios(uf_sigla: str) -> gpd.GeoDataFrame:
     if os.path.exists(cache):
         return gpd.read_file(cache)
 
-    url = _UF_MUNIS_URL.format(uf=uf_sigla, uf_lower=uf_sigla.lower())
+    url = _UF_MUNIS_URL.format(uf=uf_sigla)
     print(f"Baixando malhas municipais de {uf_sigla}...")
     r = requests.get(url, headers=HEADERS, timeout=180, stream=True)
     r.raise_for_status()
