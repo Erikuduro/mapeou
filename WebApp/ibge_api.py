@@ -16,10 +16,11 @@ import requests
 from shapely.geometry import Polygon
 
 LOCALIDADES  = "https://servicodados.ibge.gov.br/api/v1/localidades"
-BR_MUNIS_URL = (
+# Per-state URL (~5-15 MB each) — avoids loading the 200 MB Brazil-wide file into RAM
+_UF_MUNIS_URL = (
     "https://geoftp.ibge.gov.br/organizacao_do_territorio"
     "/malhas_territoriais/malhas_municipais/municipio_2022"
-    "/Brasil/BR/BR_Municipios_2022.zip"
+    "/UFs/{uf}/{uf_lower}_Municipios_2022.zip"
 )
 BR_UF_URL = (
     "https://geoftp.ibge.gov.br/organizacao_do_territorio"
@@ -181,37 +182,26 @@ def find_municipio(name: str, uf: str | None = None) -> dict:
     }
 
 
-def _ensure_munis_cached() -> None:
-    """Download BR_Municipios_2022.zip once, split by state into per-state GeoJSONs."""
-    # Check if at least one state is already cached
-    cached = [f for f in os.listdir(CACHE_DIR)
-              if f.startswith("munis_") and f.endswith(".geojson")]
-    if cached:
-        return
+def get_state_municipios(uf_sigla: str) -> gpd.GeoDataFrame:
+    """GeoDataFrame: codarea (7-digit str), nome, geometry.
+    Downloads only the requested state's shapefile (~5-15 MB) on first use.
+    """
+    cache = os.path.join(CACHE_DIR, f"munis_{uf_sigla}.geojson")
+    if os.path.exists(cache):
+        return gpd.read_file(cache)
 
-    print("Baixando BR_Municipios_2022.zip do IBGE (~200MB, apenas desta vez)...")
-    r = requests.get(BR_MUNIS_URL, headers=HEADERS, timeout=600, stream=True)
+    url = _UF_MUNIS_URL.format(uf=uf_sigla, uf_lower=uf_sigla.lower())
+    print(f"Baixando malhas municipais de {uf_sigla}...")
+    r = requests.get(url, headers=HEADERS, timeout=180, stream=True)
     r.raise_for_status()
     raw = b"".join(chunk for chunk in r.iter_content(65536) if chunk)
 
     gdf = _shp_from_zip_bytes(raw)
-    gdf = _norm_cols(gdf, {'CD_MUN': 'codarea', 'NM_MUN': 'nome', 'SIGLA_UF': 'uf_sigla'})
+    gdf = _norm_cols(gdf, {'CD_MUN': 'codarea', 'NM_MUN': 'nome'})
     gdf['codarea'] = gdf['codarea'].astype(str)
-
-    for uf in gdf['uf_sigla'].dropna().unique():
-        state_gdf = gdf[gdf['uf_sigla'] == uf][['codarea', 'nome', 'geometry']].copy()
-        state_gdf.to_file(os.path.join(CACHE_DIR, f"munis_{uf}.geojson"), driver="GeoJSON")
-
-    print(f"Cache criado para {gdf['uf_sigla'].nunique()} estados.")
-
-
-def get_state_municipios(uf_sigla: str) -> gpd.GeoDataFrame:
-    """GeoDataFrame: codarea (7-digit str), nome, geometry."""
-    _ensure_munis_cached()
-    cache = os.path.join(CACHE_DIR, f"munis_{uf_sigla}.geojson")
-    if not os.path.exists(cache):
-        raise ValueError(f"Dados para o estado {uf_sigla} não encontrados no cache.")
-    return gpd.read_file(cache)
+    state_gdf = gdf[['codarea', 'nome', 'geometry']].copy()
+    state_gdf.to_file(cache, driver="GeoJSON")
+    return state_gdf
 
 
 def get_states() -> gpd.GeoDataFrame:
