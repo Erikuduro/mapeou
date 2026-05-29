@@ -217,6 +217,9 @@ CATALOG = [
         "tabela": 5457, "variavel": 214, "classificacao": 782, "categoria": 40263,
         "tabela_n1": 1613, "classificacao_n1": 82, "categoria_n1": 2738,
         "unidade": "Toneladas", "tipo": "bar",
+        # Até 2000 o IBGE registrava em "mil frutos"; a partir de 2001 passou a toneladas.
+        # Séries anteriores são incomparáveis — iniciamos em 2001.
+        "ano_inicio": 2001,
     },
     {
         "id": "goiaba",

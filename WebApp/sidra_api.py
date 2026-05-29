@@ -164,6 +164,10 @@ def fetch_series(
     ibge_code = state[1] if state else None
     uf_nome   = state[2] if state else None
 
+    # Respeita ano mínimo definido no catálogo (descontinuidade de unidade)
+    if topic.get("ano_inicio") and ano_ini < topic["ano_inicio"]:
+        ano_ini = topic["ano_inicio"]
+
     cache_file = _cache_path(topic["id"], ano_ini, ano_fim, uf_sigla)
     if cache_file.exists():
         cached = json.loads(cache_file.read_text(encoding="utf-8"))
@@ -205,6 +209,11 @@ def fetch_series(
         "titulo":  titulo,
         "tipo":    topic.get("tipo", "bar"),
     }
+    if topic.get("ano_inicio"):
+        result["nota_metodologia"] = (
+            f"Série iniciada em {topic['ano_inicio']} · "
+            "mudança de metodologia IBGE/PAM (unidade revisada)"
+        )
 
     cache_file.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
     return result

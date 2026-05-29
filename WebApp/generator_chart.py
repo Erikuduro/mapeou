@@ -209,6 +209,10 @@ def generate_chart(series: dict) -> bytes:
     fig.text(0.10, 0.86,
              f"Fonte: IBGE — SIDRA  ·  Unidade: {unidade}  ·  Período: {anos[0]}–{anos[-1]}",
              color=MUTED, fontsize=8, va="bottom")
+    nota = series.get("nota_metodologia")
+    if nota:
+        fig.text(0.10, 0.83, f"* {nota}",
+                 color="#BB8800", fontsize=7, va="bottom", style="italic")
 
     # ── Rodapé ───────────────────────────────────────────────────────────
     fig.text(0.10, 0.04,
