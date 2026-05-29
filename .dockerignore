@@ -1,0 +1,10 @@
+WebApp/cache/
+WebApp/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.env
+MapAIAgent/
+*.pdf
+*.log
